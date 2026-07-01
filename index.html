@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="zh-HK" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="GitHub Pages 新手完整使用指南：由零開始用 GitHub Pages 發布靜態網頁的完整教學。">
+  <title>GitHub Pages 新手完整使用指南</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" id="hljs-light">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" id="hljs-dark" disabled>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --surface-2: #f0f4f8;
+      --text: #1f2937;
+      --muted: #64748b;
+      --border: #d8e0ea;
+      --primary: #2563eb;
+      --primary-2: #1d4ed8;
+      --accent: #0f766e;
+      --warning-bg: #fff7ed;
+      --warning-border: #fed7aa;
+      --shadow: 0 18px 50px rgba(15, 23, 42, .09);
+      --radius: 18px;
+      --content-width: 920px;
+      --sidebar-width: 292px;
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #334155;
+      --primary: #60a5fa;
+      --primary-2: #93c5fd;
+      --accent: #2dd4bf;
+      --warning-bg: #2f1b0b;
+      --warning-border: #9a5b18;
+      --shadow: 0 18px 50px rgba(0, 0, 0, .35);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
+      line-height: 1.75;
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,.16), transparent 32rem),
+        radial-gradient(circle at top right, rgba(15,118,110,.13), transparent 32rem),
+        var(--bg);
+      color: var(--text);
+      transition: background .25s ease, color .25s ease;
+    }
+    a { color: var(--primary); text-decoration-thickness: .08em; text-underline-offset: .18em; }
+    a:hover { color: var(--primary-2); }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: color-mix(in srgb, var(--surface) 84%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar {
+      max-width: calc(var(--content-width) + var(--sidebar-width) + 64px);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .8rem 1.25rem;
+    }
+    .brand { display: flex; align-items: center; gap: .7rem; font-weight: 800; letter-spacing: .01em; }
+    .brand-mark {
+      width: 34px; height: 34px; border-radius: 11px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white; font-weight: 900;
+      box-shadow: 0 8px 22px rgba(37,99,235,.25);
+    }
+    .actions { display: flex; gap: .5rem; align-items: center; }
+    button { font: inherit; }
+    .icon-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: .56rem .75rem;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(15,23,42,.06);
+    }
+    .icon-btn:hover { border-color: var(--primary); }
+    .layout {
+      max-width: calc(var(--content-width) + var(--sidebar-width) + 64px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: var(--sidebar-width) minmax(0, var(--content-width));
+      gap: 2rem;
+      padding: 2rem 1.25rem 4rem;
+    }
+    .toc {
+      position: sticky;
+      top: 82px;
+      align-self: start;
+      max-height: calc(100vh - 104px);
+      overflow: auto;
+      background: color-mix(in srgb, var(--surface) 90%, transparent);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .toc-title { font-size: .92rem; color: var(--muted); margin: 0 0 .75rem; font-weight: 700; }
+    .toc-link {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      padding: .42rem .55rem;
+      border-radius: 10px;
+      line-height: 1.35;
+      font-size: .94rem;
+    }
+    .toc-level-3 { margin-left: .85rem; font-size: .88rem; }
+    .toc-link:hover, .toc-link.active { background: var(--surface-2); color: var(--primary); }
+    main.article {
+      min-width: 0;
+      background: color-mix(in srgb, var(--surface) 96%, transparent);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 8px);
+      padding: clamp(1.15rem, 3vw, 3rem);
+      box-shadow: var(--shadow);
+    }
+    .article h1 {
+      margin-top: 0;
+      line-height: 1.16;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      letter-spacing: -.04em;
+      background: linear-gradient(135deg, var(--text), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .article h2 {
+      margin-top: 2.35rem;
+      padding-top: .45rem;
+      border-top: 1px solid var(--border);
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 1.25;
+    }
+    .article h3 { margin-top: 1.8rem; font-size: 1.22rem; }
+    .article p, .article li { font-size: 1.03rem; }
+    .article strong { font-weight: 800; }
+    .article hr { border: 0; border-top: 1px dashed var(--border); margin: 2rem 0; }
+    .heading-anchor {
+      opacity: 0;
+      margin-left: .5rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    h1:hover .heading-anchor, h2:hover .heading-anchor, h3:hover .heading-anchor { opacity: 1; }
+    .article code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: .1rem .35rem;
+      font-size: .92em;
+    }
+    .article pre { position: relative; overflow: auto; border-radius: 16px; border: 1px solid var(--border); }
+    .article pre code { display: block; padding: 1rem; border: 0; border-radius: 0; background: transparent; }
+    .copy-code {
+      position: absolute;
+      top: .55rem;
+      right: .55rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      padding: .25rem .55rem;
+      cursor: pointer;
+      font-size: .8rem;
+    }
+    .table-wrap { overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--border); border-radius: 16px; }
+    table { width: 100%; border-collapse: collapse; min-width: 620px; background: var(--surface); }
+    th, td { padding: .78rem .9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { background: var(--surface-2); text-align: left; font-weight: 800; }
+    tr:last-child td { border-bottom: 0; }
+    blockquote {
+      margin: 1.4rem 0;
+      padding: .95rem 1.1rem;
+      border-left: 4px solid var(--primary);
+      background: var(--surface-2);
+      border-radius: 0 14px 14px 0;
+      color: var(--muted);
+    }
+    .article p:has(strong:first-child) { scroll-margin-top: 100px; }
+    .article p:has(strong:first-child):has(> strong) { }
+    .article ul, .article ol { padding-left: 1.35rem; }
+    .article li + li { margin-top: .35rem; }
+    .footnotes {
+      margin-top: 2.5rem;
+      padding-top: 1.3rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .mobile-toc-panel { display: none; }
+    .back-to-top {
+      position: fixed; right: 1rem; bottom: 1rem; z-index: 60;
+      opacity: 0; pointer-events: none; transform: translateY(8px);
+      transition: .2s ease;
+    }
+    .back-to-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    @media (max-width: 920px) {
+      .layout { grid-template-columns: 1fr; padding-top: 1rem; }
+      .toc { display: none; }
+      .mobile-toc-panel {
+        display: block;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: .65rem 1.25rem;
+      }
+      .mobile-toc-panel details { max-width: var(--content-width); margin: 0 auto; }
+      .mobile-toc-panel summary { cursor: pointer; font-weight: 800; }
+      .mobile-toc-panel nav { padding-top: .6rem; }
+      .brand span:last-child { display: none; }
+      .icon-btn .label { display: none; }
+      main.article { border-radius: 20px; }
+      table { min-width: 560px; }
+    }
+    @media print {
+      .site-header, .toc, .mobile-toc-panel, .back-to-top, .heading-anchor, .copy-code { display: none !important; }
+      body { background: #fff; color: #000; }
+      .layout { display: block; max-width: none; padding: 0; }
+      main.article { box-shadow: none; border: 0; padding: 0; }
+      a { color: #000; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="topbar">
+      <div class="brand" aria-label="網站標題"><span class="brand-mark">GP</span><span>GitHub Pages 新手完整使用指南</span></div>
+      <div class="actions">
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="切換亮色或暗色模式"><span id="themeIcon">🌙</span><span class="label">暗色模式</span></button>
+      </div>
+    </div>
+  </header>
+  <div class="mobile-toc-panel">
+    <details>
+      <summary>目錄</summary>
+      <nav aria-label="手機目錄"><a class="toc-link toc-level-2" href="#概覽github-pages-係咩">概覽：GitHub Pages 係咩？</a>
+<a class="toc-link toc-level-2" href="#重點一github-pages-的三種類型">重點一：GitHub Pages 的三種類型</a>
+<a class="toc-link toc-level-2" href="#重點二費用與計劃限制">重點二：費用與計劃限制</a>
+<a class="toc-link toc-level-2" href="#重點三使用限制usage-limits">重點三：使用限制（Usage Limits）</a>
+<a class="toc-link toc-level-2" href="#重點四禁止使用場景">重點四：禁止使用場景</a>
+<a class="toc-link toc-level-2" href="#實操步驟由零開始發布第一個網頁">實操步驟：由零開始發布第一個網頁</a>
+<a class="toc-link toc-level-3" href="#第一步注冊-github-帳號">第一步：注冊 GitHub 帳號</a>
+<a class="toc-link toc-level-3" href="#第二步建立-repository倉庫">第二步：建立 Repository（倉庫）</a>
+<a class="toc-link toc-level-3" href="#第三步上傳你的-html-文件不需要用命令行">第三步：上傳你的 HTML 文件（不需要用命令行）</a>
+<a class="toc-link toc-level-3" href="#第四步開啟-github-pages">第四步：開啟 GitHub Pages</a>
+<a class="toc-link toc-level-3" href="#第五步等待發布取得網址">第五步：等待發布，取得網址</a>
+<a class="toc-link toc-level-2" href="#進階綁定自己的域名custom-domain">進階：綁定自己的域名（Custom Domain）</a>
+<a class="toc-link toc-level-2" href="#更新網頁每次改動如何同步">更新網頁：每次改動如何同步</a>
+<a class="toc-link toc-level-2" href="#github-pages-vs-其他免費托管平台">GitHub Pages vs 其他免費托管平台</a>
+<a class="toc-link toc-level-2" href="#新手照做清單">新手照做清單</a>
+<a class="toc-link toc-level-2" href="#常見問題與解決方法">常見問題與解決方法</a>
+<a class="toc-link toc-level-2" href="#references">References</a></nav>
+    </details>
+  </div>
+  <div class="layout">
+    <aside class="toc" aria-label="章節目錄">
+      <p class="toc-title">目錄</p>
+      <nav><a class="toc-link toc-level-2" href="#概覽github-pages-係咩">概覽：GitHub Pages 係咩？</a>
+<a class="toc-link toc-level-2" href="#重點一github-pages-的三種類型">重點一：GitHub Pages 的三種類型</a>
+<a class="toc-link toc-level-2" href="#重點二費用與計劃限制">重點二：費用與計劃限制</a>
+<a class="toc-link toc-level-2" href="#重點三使用限制usage-limits">重點三：使用限制（Usage Limits）</a>
+<a class="toc-link toc-level-2" href="#重點四禁止使用場景">重點四：禁止使用場景</a>
+<a class="toc-link toc-level-2" href="#實操步驟由零開始發布第一個網頁">實操步驟：由零開始發布第一個網頁</a>
+<a class="toc-link toc-level-3" href="#第一步注冊-github-帳號">第一步：注冊 GitHub 帳號</a>
+<a class="toc-link toc-level-3" href="#第二步建立-repository倉庫">第二步：建立 Repository（倉庫）</a>
+<a class="toc-link toc-level-3" href="#第三步上傳你的-html-文件不需要用命令行">第三步：上傳你的 HTML 文件（不需要用命令行）</a>
+<a class="toc-link toc-level-3" href="#第四步開啟-github-pages">第四步：開啟 GitHub Pages</a>
+<a class="toc-link toc-level-3" href="#第五步等待發布取得網址">第五步：等待發布，取得網址</a>
+<a class="toc-link toc-level-2" href="#進階綁定自己的域名custom-domain">進階：綁定自己的域名（Custom Domain）</a>
+<a class="toc-link toc-level-2" href="#更新網頁每次改動如何同步">更新網頁：每次改動如何同步</a>
+<a class="toc-link toc-level-2" href="#github-pages-vs-其他免費托管平台">GitHub Pages vs 其他免費托管平台</a>
+<a class="toc-link toc-level-2" href="#新手照做清單">新手照做清單</a>
+<a class="toc-link toc-level-2" href="#常見問題與解決方法">常見問題與解決方法</a>
+<a class="toc-link toc-level-2" href="#references">References</a></nav>
+    </aside>
+    <main class="article" id="content">
+      <section class="level1" id="github-pages-新手完整使用指南">
+<h1 id="github-pages-新手完整使用指南">GitHub Pages 新手完整使用指南<a aria-label="複製章節連結" class="heading-anchor" href="#github-pages-新手完整使用指南">#</a></h1>
+<section class="level2" id="概覽github-pages-係咩">
+<h2 id="概覽github-pages-係咩">概覽：GitHub Pages 係咩？<a aria-label="複製章節連結" class="heading-anchor" href="#概覽github-pages-係咩">#</a></h2>
+<p>GitHub Pages 係 GitHub
+提供的<strong>免費靜態網站托管服務</strong>。你只需要把
+HTML、CSS、JavaScript 文件上傳到 GitHub 的
+Repository（倉庫），它就會自動把你的文件變成一個可以公開瀏覽的網址。[^1]</p>
+<p>簡單理解：Repository 就係你的「網站資料夾」，GitHub Pages
+就係負責把這個資料夾「掛上互聯網」的服務。</p>
+<hr/>
+</section>
+<section class="level2" id="重點一github-pages-的三種類型">
+<h2 id="重點一github-pages-的三種類型">重點一：GitHub Pages 的三種類型<a aria-label="複製章節連結" class="heading-anchor" href="#重點一github-pages-的三種類型">#</a></h2>
+<p>GitHub Pages 分三種，新手只需認識前兩種：[^1]</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th>類型</th>
+<th>Repository 命名規則</th>
+<th>預設網址</th>
+<th>備注</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>個人站</strong></td>
+<td><code>你的用戶名.github.io</code></td>
+<td><code>https://你的用戶名.github.io</code></td>
+<td>每個帳號只能有一個</td>
+</tr>
+<tr class="even">
+<td><strong>項目站</strong></td>
+<td>任何名稱（如 <code>my-project</code>）</td>
+<td><code>https://你的用戶名.github.io/my-project</code></td>
+<td>可以無限個</td>
+</tr>
+<tr class="odd">
+<td>組織站</td>
+<td><code>組織名.github.io</code></td>
+<td><code>https://組織名.github.io</code></td>
+<td>給公司/團隊用</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>實際例子：</strong> 假設你的 GitHub 用戶名係
+<code>hkuser88</code>，你建立一個名為 <code>hado-guide</code> 的
+Repository，開啟 GitHub Pages 後，你的網址就係
+<code>https://hkuser88.github.io/hado-guide</code>。</p>
+<hr/>
+</section>
+<section class="level2" id="重點二費用與計劃限制">
+<h2 id="重點二費用與計劃限制">重點二：費用與計劃限制<a aria-label="複製章節連結" class="heading-anchor" href="#重點二費用與計劃限制">#</a></h2>
+<p>GitHub Pages 在<strong>免費計劃（GitHub
+Free）</strong>下，只能用於<strong>公開（Public）Repository</strong>。[^2][^3]</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>計劃</th>
+<th>費用</th>
+<th>支持 Private Repo?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GitHub Free</td>
+<td>免費</td>
+<td>❌ 不支持（只限 Public）</td>
+</tr>
+<tr class="even">
+<td>GitHub Pro</td>
+<td>約 US$4/月</td>
+<td>✅ 支持</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>⚠️ 重要風險提示：</strong> 用免費計劃時，你的 Repository
+及網站內容<strong>對全世界公開可見</strong>，包括你的代碼。切勿把 API
+金鑰、密碼、私人客戶資料放入 Repository。[^1]</p>
+<hr/>
+</section>
+<section class="level2" id="重點三使用限制usage-limits">
+<h2 id="重點三使用限制usage-limits">重點三：使用限制（Usage Limits）<a aria-label="複製章節連結" class="heading-anchor" href="#重點三使用限制usage-limits">#</a></h2>
+<p>GitHub Pages
+有以下限制，一般個人或小型項目根本碰不到，但要知道：[^4]</p>
+<ul>
+<li><strong>Repository 大小</strong>：建議上限 1
+GB（超過會收到警告）</li>
+<li><strong>已發布網站大小</strong>：上限 1 GB</li>
+<li><strong>每月頻寬</strong>：100 GB（軟性上限，超出可能被聯絡）</li>
+<li><strong>每小時建置次數</strong>：10 次（用 GitHub Actions
+自定義工作流程則不受限）</li>
+<li><strong>建置時間</strong>：每次最多 10 分鐘</li>
+</ul>
+<p><strong>⚠️ 另一重要限制：</strong> GitHub Pages
+<strong>不支持伺服器端語言</strong>，例如
+PHP、Python、Ruby，以及<strong>不能連接數據庫</strong>。你只能放靜態文件（HTML、CSS、JS、圖片）。你在上一篇討論中用
+ChatGPT 生成的單一 HTML 文件，剛好完全符合這個要求。[^1]</p>
+<hr/>
+</section>
+<section class="level2" id="重點四禁止使用場景">
+<h2 id="重點四禁止使用場景">重點四：禁止使用場景<a aria-label="複製章節連結" class="heading-anchor" href="#重點四禁止使用場景">#</a></h2>
+<p>GitHub Pages <strong>不得</strong>用作：[^4] - 商業網店（電商） -
+SaaS 產品的前端（以此作主要業務托管） -
+涉及信用卡或密碼輸入的交易頁面</p>
+<p>個人項目、文件站、作品集、活動介紹頁、教學材料等，完全沒問題。</p>
+<hr/>
+</section>
+<section class="level2" id="實操步驟由零開始發布第一個網頁">
+<h2 id="實操步驟由零開始發布第一個網頁">實操步驟：由零開始發布第一個網頁<a aria-label="複製章節連結" class="heading-anchor" href="#實操步驟由零開始發布第一個網頁">#</a></h2>
+<section class="level3" id="第一步注冊-github-帳號">
+<h3 id="第一步注冊-github-帳號">第一步：注冊 GitHub 帳號<a aria-label="複製章節連結" class="heading-anchor" href="#第一步注冊-github-帳號">#</a></h3>
+<p>前往 <a href="https://github.com" rel="noopener noreferrer" target="_blank">github.com</a> 注冊免費帳號。</p>
+<ul>
+<li>選擇一個有意義的用戶名，因為它會出現在你的網址裡</li>
+<li><strong>例子</strong>：用戶名選
+<code>hkuser88</code>，日後個人站網址就是
+<code>https://hkuser88.github.io</code></li>
+</ul>
+</section>
+<section class="level3" id="第二步建立-repository倉庫">
+<h3 id="第二步建立-repository倉庫">第二步：建立 Repository（倉庫）<a aria-label="複製章節連結" class="heading-anchor" href="#第二步建立-repository倉庫">#</a></h3>
+<ol type="1">
+<li>登入後，點右上角「<strong>+</strong>」按鈕 → 選「<strong>New
+repository</strong>」</li>
+<li>填寫 Repository 名稱
+<ul>
+<li>如果你想建<strong>個人站</strong>，名稱<strong>必須是</strong>
+<code>你的用戶名.github.io</code>（例如
+<code>hkuser88.github.io</code>）[^1]</li>
+<li>如果你想建<strong>項目站</strong>，隨意起名（例如
+<code>hado-guide</code>）</li>
+</ul></li>
+<li>選擇 <strong>Public</strong>（免費計劃必須選 Public）[^2]</li>
+<li>勾選 「<strong>Add a README
+file</strong>」（建議勾選，方便後續操作）</li>
+<li>點「<strong>Create repository</strong>」</li>
+</ol>
+<p><strong>實際例子</strong>：你想放一份 HADO 活動介紹，建一個叫
+<code>hado-guide</code> 的 Repository，網址最後會是
+<code>https://hkuser88.github.io/hado-guide</code>。</p>
+</section>
+<section class="level3" id="第三步上傳你的-html-文件不需要用命令行">
+<h3 id="第三步上傳你的-html-文件不需要用命令行">第三步：上傳你的 HTML 文件（不需要用命令行）<a aria-label="複製章節連結" class="heading-anchor" href="#第三步上傳你的-html-文件不需要用命令行">#</a></h3>
+<p><strong>用瀏覽器直接上傳，唔需要裝任何軟件</strong>：[^5]</p>
+<ol type="1">
+<li>進入你的 Repository 頁面</li>
+<li>點「<strong>Add file</strong>」按鈕 → 選「<strong>Upload
+files</strong>」</li>
+<li>把你的 <code>index.html</code>
+文件<strong>拖拉進上傳區域</strong>，或點「choose your files」選取</li>
+<li>在下方 Commit
+欄填寫一個簡短說明（例如：<code>Add HADO guide webpage</code>）</li>
+<li>確保選「<strong>Commit directly to the main branch</strong>」</li>
+<li>點「<strong>Commit changes</strong>」</li>
+</ol>
+<p><strong>⚠️ 注意：</strong> 網頁入口文件必須命名為
+<code>index.html</code>，GitHub Pages 會優先讀取這個文件。其他圖片、CSS
+文件可以額外上傳。單個文件上限為 25 MB。[^5]</p>
+</section>
+<section class="level3" id="第四步開啟-github-pages">
+<h3 id="第四步開啟-github-pages">第四步：開啟 GitHub Pages<a aria-label="複製章節連結" class="heading-anchor" href="#第四步開啟-github-pages">#</a></h3>
+<ol type="1">
+<li>進入
+Repository，點上方「<strong>Settings</strong>（設定）」標籤</li>
+<li>左側側欄找「<strong>Pages</strong>」（在「Code and
+automation」分類下）</li>
+<li>在「<strong>Build and deployment</strong>」下，Source
+選「<strong>Deploy from a branch</strong>」</li>
+<li>Branch 選「<strong>main</strong>」，資料夾選「<strong>/
+(root)</strong>」</li>
+<li>點「<strong>Save</strong>」</li>
+</ol>
+</section>
+<section class="level3" id="第五步等待發布取得網址">
+<h3 id="第五步等待發布取得網址">第五步：等待發布，取得網址<a aria-label="複製章節連結" class="heading-anchor" href="#第五步等待發布取得網址">#</a></h3>
+<ul>
+<li>發布需時約 <strong>1-10 分鐘</strong>，請耐心等待</li>
+<li>完成後，返回 Settings → Pages，你會看到一個綠色橫條顯示「Your site
+is live at…」，以及「<strong>Visit site</strong>」按鈕</li>
+<li>點擊就可以看到你的網頁</li>
+</ul>
+<p><strong>實際例子</strong>：你的 HADO 活動介紹 HTML，上傳後約 2-3
+分鐘，就可以在 <code>https://hkuser88.github.io/hado-guide</code>
+看到完整網頁，HTTPS 自動啟用。</p>
+<hr/>
+</section>
+</section>
+<section class="level2" id="進階綁定自己的域名custom-domain">
+<h2 id="進階綁定自己的域名custom-domain">進階：綁定自己的域名（Custom Domain）<a aria-label="複製章節連結" class="heading-anchor" href="#進階綁定自己的域名custom-domain">#</a></h2>
+<p>如果你有自己的域名（例如 <code>hadohk.com</code>），可以把它綁定到
+GitHub Pages，免費獲得 HTTPS。</p>
+<p>GitHub Pages 支援兩種域名類型：</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th>類型</th>
+<th>例子</th>
+<th>DNS 設定方式</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Apex domain（根域名）</td>
+<td><code>hadohk.com</code></td>
+<td>在域名商設 A 記錄（指向 GitHub IP）</td>
+</tr>
+<tr class="even">
+<td>www 子域名</td>
+<td><code>www.hadohk.com</code></td>
+<td>在域名商設 CNAME 記錄（指向 <code>用戶名.github.io</code>）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>設定步驟：</strong> 1. 在 Repository 的 Settings → Pages →
+Custom domain，輸入你的域名 2. 到你的域名供應商（如
+Cloudflare、Namecheap）設定對應 DNS 記錄 3. 勾選「<strong>Enforce
+HTTPS</strong>」</p>
+<p><strong>⚠️ 安全風險提示：</strong>
+如果你設定了自定義域名後<strong>停用 GitHub
+Pages</strong>，你的域名有可能被其他人用於惡意目的（Domain Takeover
+Attack）。停用前應先移除 DNS 記錄。</p>
+<hr/>
+</section>
+<section class="level2" id="更新網頁每次改動如何同步">
+<h2 id="更新網頁每次改動如何同步">更新網頁：每次改動如何同步<a aria-label="複製章節連結" class="heading-anchor" href="#更新網頁每次改動如何同步">#</a></h2>
+<p>每次你要更新網頁內容： 1. 進入 Repository 2. 點擊你要修改的文件（如
+<code>index.html</code>） 3. 點右上方「✏️
+Edit」按鈕，直接在網頁上修改內容 4.
+或重新上傳新版文件（同名文件會自動覆蓋，舊版本保留在歷史記錄） 5. 填
+Commit 說明，點「Commit changes」</p>
+<p>GitHub 會自動重新發布，約 1-10 分鐘後更新生效。</p>
+<p><strong>⚠️ 建置頻率限制：</strong> 每小時只能建置 10
+次。如果你頻繁改動測試，可能需要等候。[^4]</p>
+<hr/>
+</section>
+<section class="level2" id="github-pages-vs-其他免費托管平台">
+<h2 id="github-pages-vs-其他免費托管平台">GitHub Pages vs 其他免費托管平台<a aria-label="複製章節連結" class="heading-anchor" href="#github-pages-vs-其他免費托管平台">#</a></h2>
+<p>如果日後你的需求增加，可以考慮遷移：[^6][^7]</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>功能</th>
+<th>GitHub Pages</th>
+<th>Netlify</th>
+<th>Vercel</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>靜態網站托管</td>
+<td>✅ 免費</td>
+<td>✅ 免費</td>
+<td>✅ 免費</td>
+</tr>
+<tr class="even">
+<td>每月頻寬</td>
+<td>100 GB</td>
+<td>100 GB</td>
+<td>100 GB</td>
+</tr>
+<tr class="odd">
+<td>自定義域名 + HTTPS</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>表單收集功能</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr class="odd">
+<td>Serverless Functions</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>Next.js / React 框架支持</td>
+<td>❌（限靜態）</td>
+<td>✅</td>
+<td>✅（最優）</td>
+</tr>
+<tr class="odd">
+<td>Preview Deployments</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>最適合場景</td>
+<td>簡單靜態頁面</td>
+<td>需要表單或 Function</td>
+<td>Next.js 項目</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>建議</strong>：如你只是托管 ChatGPT 生成的靜態 HTML，GitHub
+Pages 已經完全足夠，無需遷移。若日後需要後端 Function
+或更複雜框架，再考慮 Vercel 或 Netlify。</p>
+<hr/>
+</section>
+<section class="level2" id="新手照做清單">
+<h2 id="新手照做清單">新手照做清單<a aria-label="複製章節連結" class="heading-anchor" href="#新手照做清單">#</a></h2>
+<p>以下按序完成即可發布你的第一個網頁：</p>
+<ul class="task-list">
+<li><label><input type="checkbox"/>在 <a href="https://github.com" rel="noopener noreferrer" target="_blank">github.com</a>
+注冊免費帳號，記低你的用戶名</label></li>
+<li><label><input type="checkbox"/>建立一個 <strong>Public
+Repository</strong>（項目站用任意名稱；個人站用
+<code>用戶名.github.io</code>）</label></li>
+<li><label><input type="checkbox"/>用 ChatGPT Plus 生成你的
+<code>index.html</code>，儲存到本地</label></li>
+<li><label><input type="checkbox"/>進入 Repository → Add file → Upload
+files → 上傳 <code>index.html</code></label></li>
+<li><label><input type="checkbox"/>填寫 Commit 訊息，點 Commit
+changes</label></li>
+<li><label><input type="checkbox"/>進入 Settings → Pages → Source 選
+Deploy from a branch → main / root → Save</label></li>
+<li><label><input type="checkbox"/>等待 1-10 分鐘，頁面上出現綠色「Your
+site is live」後，點 Visit site 確認</label></li>
+<li><label><input type="checkbox"/>（可選）在 Settings → Pages → Custom
+domain 綁定自己的域名</label></li>
+</ul>
+<hr/>
+</section>
+<section class="level2" id="常見問題與解決方法">
+<h2 id="常見問題與解決方法">常見問題與解決方法<a aria-label="複製章節連結" class="heading-anchor" href="#常見問題與解決方法">#</a></h2>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th>問題</th>
+<th>原因</th>
+<th>解決方法</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>等了 30 分鐘還沒發布</td>
+<td>可能有建置錯誤</td>
+<td>進 Repository → Actions 頁面看錯誤記錄</td>
+</tr>
+<tr class="even">
+<td>網頁顯示 404</td>
+<td><code>index.html</code> 可能不在根目錄</td>
+<td>確保 <code>index.html</code> 在 Repository
+最頂層，不是放在子文件夾</td>
+</tr>
+<tr class="odd">
+<td>圖片不顯示</td>
+<td>圖片路徑不正確</td>
+<td>確保圖片和 HTML 在同一目錄，路徑用相對路徑
+<code>./image.png</code></td>
+</tr>
+<tr class="even">
+<td>改了文件但網頁沒更新</td>
+<td>瀏覽器快取</td>
+<td>按 <code>Ctrl+Shift+R</code>（Windows）或
+<code>Cmd+Shift+R</code>（Mac）強制刷新</td>
+</tr>
+<tr class="odd">
+<td>Settings 裡看不到 Pages 選項</td>
+<td>Repository 是 Private</td>
+<td>改為 Public，或升級 GitHub Pro</td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+</section>
+<section class="level2" id="references">
+<h2 id="references">References<a aria-label="複製章節連結" class="heading-anchor" href="#references">#</a></h2>
+<ol type="1">
+<li><p><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages" rel="noopener noreferrer" target="_blank">What
+is GitHub Pages? - GitHub Docs</a> - You can use GitHub Pages to host a
+website about yourself, your organization, or your project
+direct…</p></li>
+<li><p><a href="https://docs.github.com/en/get-started/learning-about-github/githubs-plans" rel="noopener noreferrer" target="_blank">GitHub’s
+plans</a> - An overview of GitHub’s pricing plans.</p></li>
+<li><p><a href="https://github.com/orgs/community/discussions/167331" rel="noopener noreferrer" target="_blank">GitHub Pages
+with Free Account: Private Repos, Static …</a> - Hi, Can I host a
+private repository using GitHub Pages with a free personal GitHub
+account? Does it …</p></li>
+<li><p><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits" rel="noopener noreferrer" target="_blank">GitHub
+Pages limits</a> - Learn about the limits and limitations of GitHub
+Pages.</p></li>
+<li><p><a href="https://www.rapidevelopers.com/github-for-non-tech/how-to-upload-files-to-github" rel="noopener noreferrer" target="_blank">How
+to Upload Files to GitHub Using the Web Interface</a> - Upload files to
+GitHub without the terminal. Use Add file, drag and drop, write a commit
+message, an…</p></li>
+<li><p><a href="https://jp-my-blog.vercel.app/blog/github-pages-vs-netlify-cloudflare-pages-and-vercel-the-only-free-static-site-host-comparison-that-matters" rel="noopener noreferrer" target="_blank">The
+Only Free Static Site Host Comparison That Matters</a> - A clear,
+no-nonsense comparison of GitHub Pages, Netlify, Cloudflare Pages, and
+Vercel for free stat…</p></li>
+<li><p><a href="https://is-pro.dev/compare/github-pages-vs-vercel-vs-netlify/" rel="noopener noreferrer" target="_blank">GitHub
+Pages vs Vercel vs Netlify: Which is Best for Your Project? —
+is-cool-me</a> - Side-by-side comparison of the three most popular free
+static hosting platforms — covering deploymen…</p></li>
+</ol>
+</section>
+</section>
+
+    </main>
+  </div>
+  <button class="icon-btn back-to-top" id="backToTop" type="button" aria-label="返回頁首">↑</button>
+  <script>
+    const root = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const lightCss = document.getElementById('hljs-light');
+    const darkCss = document.getElementById('hljs-dark');
+
+    function applyTheme(theme) {
+      root.dataset.theme = theme;
+      localStorage.setItem('page-theme', theme);
+      const isDark = theme === 'dark';
+      themeIcon.textContent = isDark ? '☀️' : '🌙';
+      themeToggle.querySelector('.label').textContent = isDark ? '亮色模式' : '暗色模式';
+      lightCss.disabled = isDark;
+      darkCss.disabled = !isDark;
+    }
+
+    const savedTheme = localStorage.getItem('page-theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+    themeToggle.addEventListener('click', () => applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.hljs) hljs.highlightAll();
+      document.querySelectorAll('pre').forEach((pre) => {
+        const button = document.createElement('button');
+        button.className = 'copy-code';
+        button.type = 'button';
+        button.textContent = '複製';
+        button.addEventListener('click', async () => {
+          const code = pre.querySelector('code')?.innerText || '';
+          try {
+            await navigator.clipboard.writeText(code);
+            button.textContent = '已複製';
+            setTimeout(() => button.textContent = '複製', 1400);
+          } catch (error) { button.textContent = '失敗'; }
+        });
+        pre.appendChild(button);
+      });
+    });
+
+    const tocLinks = Array.from(document.querySelectorAll('.toc-link'));
+    const sections = tocLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        tocLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id));
+      });
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+    sections.forEach(section => observer.observe(section));
+
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 640);
+    });
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>
